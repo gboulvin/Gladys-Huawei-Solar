@@ -1,0 +1,1289 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Huawei Solar",
+  "description": {
+    "en": "Huawei SUN2000 inverters, LUNA2000 batteries and power meters, local or cloud.",
+    "fr": "Onduleurs Huawei SUN2000, batteries LUNA2000 et compteurs, en local ou cloud.",
+    "de": "Huawei SUN2000 Wechselrichter, LUNA2000 Akkus und Zähler, lokal oder Cloud.",
+    "es": "Inversores Huawei SUN2000, baterías LUNA2000 y medidores, local o nube."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-huawei-solar:1.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Huawei-Solar/main/cover.png",
+  "categories": ["energy"],
+  "transports": ["local", "cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Primeros pasos"
+      },
+      "description": {
+        "en": "Connect your Huawei installation locally (Modbus TCP through the SDongle, EMMA or the inverter WLAN) and/or through the FusionSolar cloud (Northbound API account). With both, the toggle below picks the preferred one and the other is used as a fallback. Commands (battery, export limit) need the local connection.",
+        "fr": "Connectez votre installation Huawei en local (Modbus TCP via le SDongle, l'EMMA ou le Wi-Fi de l'onduleur) et/ou via le cloud FusionSolar (compte API Northbound). Avec les deux, l'interrupteur ci-dessous choisit la connexion préférée, l'autre sert de secours. Les commandes (batterie, limite d'injection) nécessitent la connexion locale.",
+        "de": "Verbinden Sie Ihre Huawei-Anlage lokal (Modbus TCP über SDongle, EMMA oder das WLAN des Wechselrichters) und/oder über die FusionSolar-Cloud (Northbound-API-Konto). Mit beiden wählt der Schalter unten die bevorzugte Verbindung, die andere dient als Ersatz. Befehle (Akku, Einspeisebegrenzung) erfordern die lokale Verbindung.",
+        "es": "Conecte su instalación Huawei en local (Modbus TCP mediante el SDongle, el EMMA o el WLAN del inversor) y/o mediante la nube FusionSolar (cuenta API Northbound). Con ambas, el interruptor de abajo elige la preferida y la otra sirve de respaldo. Las órdenes (batería, límite de inyección) requieren la conexión local."
+      },
+      "links": [
+        {
+          "url": "https://github.com/gboulvin/Gladys-Huawei-Solar#readme",
+          "label": {
+            "en": "Integration guide",
+            "fr": "Guide de l'intégration",
+            "de": "Anleitung zur Integration",
+            "es": "Guía de la integración"
+          }
+        }
+      ]
+    },
+    {
+      "key": "local_section",
+      "type": "section",
+      "label": {
+        "en": "Local connection (Modbus TCP)",
+        "fr": "Connexion locale (Modbus TCP)",
+        "de": "Lokale Verbindung (Modbus TCP)",
+        "es": "Conexión local (Modbus TCP)"
+      },
+      "description": {
+        "en": "Enable Modbus TCP on the SDongle in the FusionSolar app (Device commissioning > Settings > Communication configuration > Dongle parameter settings > Modbus TCP: Enable (unrestricted)). Port 502 through the SDongle; port 6607 and unit id 0 through the inverter WLAN.",
+        "fr": "Activez Modbus TCP sur le SDongle dans l'application FusionSolar (Mise en service > Paramètres > Configuration de la communication > Paramètres du Dongle > Modbus TCP : Activer (sans restriction)). Port 502 via le SDongle ; port 6607 et unit id 0 via le Wi-Fi de l'onduleur.",
+        "de": "Aktivieren Sie Modbus TCP am SDongle in der FusionSolar-App (Inbetriebnahme > Einstellungen > Kommunikationskonfiguration > Dongle-Parameter > Modbus TCP: Aktivieren (uneingeschränkt)). Port 502 über den SDongle; Port 6607 und Unit-ID 0 über das WLAN des Wechselrichters.",
+        "es": "Active Modbus TCP en el SDongle desde la app FusionSolar (Puesta en servicio > Ajustes > Configuración de comunicación > Parámetros del Dongle > Modbus TCP: Activar (sin restricción)). Puerto 502 mediante el SDongle; puerto 6607 y unit id 0 mediante el WLAN del inversor."
+      }
+    },
+    {
+      "key": "modbus_host",
+      "type": "string",
+      "label": {
+        "en": "Inverter / SDongle address",
+        "fr": "Adresse de l’onduleur / SDongle",
+        "de": "Adresse Wechselrichter / SDongle",
+        "es": "Dirección del inversor / SDongle"
+      },
+      "description": {
+        "en": "IP address or host name on your local network. Leave empty to use the cloud only.",
+        "fr": "Adresse IP ou nom d’hôte sur votre réseau local. Laissez vide pour utiliser uniquement le cloud.",
+        "de": "IP-Adresse oder Hostname im lokalen Netzwerk. Leer lassen, um nur die Cloud zu nutzen.",
+        "es": "Dirección IP o nombre de host en su red local. Déjelo vacío para usar solo la nube."
+      },
+      "placeholder": {
+        "en": "e.g. 192.168.1.50",
+        "fr": "ex. 192.168.1.50",
+        "de": "z. B. 192.168.1.50",
+        "es": "p. ej. 192.168.1.50"
+      },
+      "required": false
+    },
+    {
+      "key": "modbus_port",
+      "type": "number",
+      "label": {
+        "en": "Modbus port",
+        "fr": "Port Modbus",
+        "de": "Modbus-Port",
+        "es": "Puerto Modbus"
+      },
+      "required": false,
+      "default": 502,
+      "min": 1,
+      "max": 65535
+    },
+    {
+      "key": "modbus_unit_id",
+      "type": "number",
+      "label": {
+        "en": "Modbus unit id",
+        "fr": "Unit id Modbus",
+        "de": "Modbus-Unit-ID",
+        "es": "Unit id Modbus"
+      },
+      "description": {
+        "en": "Usually 1 through the SDongle, 0 through the inverter WLAN.",
+        "fr": "Généralement 1 via le SDongle, 0 via le Wi-Fi de l’onduleur.",
+        "de": "Meist 1 über den SDongle, 0 über das WLAN des Wechselrichters.",
+        "es": "Normalmente 1 mediante el SDongle, 0 mediante el WLAN del inversor."
+      },
+      "required": false,
+      "default": 1,
+      "min": 0,
+      "max": 247
+    },
+    {
+      "key": "cloud_section",
+      "type": "section",
+      "label": {
+        "en": "Cloud connection (FusionSolar)",
+        "fr": "Connexion cloud (FusionSolar)",
+        "de": "Cloud-Verbindung (FusionSolar)",
+        "es": "Conexión en la nube (FusionSolar)"
+      },
+      "description": {
+        "en": "Uses the FusionSolar Northbound API: ask your installer for an API account (System > Company Management > Northbound Management). Your usual app login does not work here. Data is refreshed every 5 minutes at most.",
+        "fr": "Utilise l'API Northbound de FusionSolar : demandez un compte API à votre installateur (Système > Gestion de l'entreprise > Gestion Northbound). Vos identifiants habituels de l'application ne fonctionnent pas ici. Les données sont rafraîchies toutes les 5 minutes au mieux.",
+        "de": "Nutzt die FusionSolar-Northbound-API: Bitten Sie Ihren Installateur um ein API-Konto (System > Unternehmensverwaltung > Northbound-Verwaltung). Ihr normales App-Login funktioniert hier nicht. Die Daten werden höchstens alle 5 Minuten aktualisiert.",
+        "es": "Usa la API Northbound de FusionSolar: pida a su instalador una cuenta API (Sistema > Gestión de empresa > Gestión Northbound). Su usuario habitual de la app no sirve aquí. Los datos se actualizan cada 5 minutos como máximo."
+      },
+      "links": [
+        {
+          "url": "https://eu5.fusionsolar.huawei.com",
+          "label": {
+            "en": "FusionSolar",
+            "fr": "FusionSolar",
+            "de": "FusionSolar",
+            "es": "FusionSolar"
+          }
+        }
+      ]
+    },
+    {
+      "key": "fusionsolar_url",
+      "type": "string",
+      "label": {
+        "en": "FusionSolar server",
+        "fr": "Serveur FusionSolar",
+        "de": "FusionSolar-Server",
+        "es": "Servidor FusionSolar"
+      },
+      "description": {
+        "en": "The address you use to log in to FusionSolar in a browser, e.g. https://eu5.fusionsolar.huawei.com or https://intl.fusionsolar.huawei.com.",
+        "fr": "L'adresse que vous utilisez pour vous connecter à FusionSolar dans un navigateur, ex. https://eu5.fusionsolar.huawei.com ou https://intl.fusionsolar.huawei.com.",
+        "de": "Die Adresse, mit der Sie sich im Browser bei FusionSolar anmelden, z. B. https://eu5.fusionsolar.huawei.com oder https://intl.fusionsolar.huawei.com.",
+        "es": "La dirección que usa para entrar en FusionSolar desde un navegador, p. ej. https://eu5.fusionsolar.huawei.com o https://intl.fusionsolar.huawei.com."
+      },
+      "placeholder": {
+        "en": "https://eu5.fusionsolar.huawei.com",
+        "fr": "https://eu5.fusionsolar.huawei.com",
+        "de": "https://eu5.fusionsolar.huawei.com",
+        "es": "https://eu5.fusionsolar.huawei.com"
+      },
+      "required": false,
+      "default": "https://eu5.fusionsolar.huawei.com"
+    },
+    {
+      "key": "fusionsolar_username",
+      "type": "string",
+      "label": {
+        "en": "API user name",
+        "fr": "Nom d’utilisateur API",
+        "de": "API-Benutzername",
+        "es": "Usuario de la API"
+      },
+      "placeholder": {
+        "en": "Northbound API account",
+        "fr": "Compte API Northbound",
+        "de": "Northbound-API-Konto",
+        "es": "Cuenta API Northbound"
+      },
+      "required": false
+    },
+    {
+      "key": "fusionsolar_password",
+      "type": "secret",
+      "label": {
+        "en": "API password (system code)",
+        "fr": "Mot de passe API (system code)",
+        "de": "API-Passwort (System-Code)",
+        "es": "Contraseña API (system code)"
+      },
+      "required": false
+    },
+    {
+      "key": "advanced_section",
+      "type": "section",
+      "label": {
+        "en": "Advanced settings",
+        "fr": "Réglages avancés",
+        "de": "Erweiterte Einstellungen",
+        "es": "Ajustes avanzados"
+      },
+      "description": {
+        "en": "Refresh interval of the readings and dead band of the \"grid exchange changed\" scene trigger.",
+        "fr": "Fréquence de lecture des mesures et zone morte du déclencheur de scène « l’échange réseau change ».",
+        "de": "Ausleseintervall der Messwerte und Totband des Szenen-Auslösers „Netzaustausch geändert“.",
+        "es": "Intervalo de lectura de las medidas y banda muerta del disparador de escena «cambio en el intercambio con la red»."
+      }
+    },
+    {
+      "key": "poll_frequency",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)",
+        "de": "Aktualisierungsintervall (s)",
+        "es": "Intervalo de actualización (s)"
+      },
+      "description": {
+        "en": "How often the installation is read, in seconds (30 s minimum locally, 300 s minimum through the cloud).",
+        "fr": "Fréquence de lecture de l'installation, en secondes (30 s minimum en local, 300 s minimum via le cloud).",
+        "de": "Wie oft die Anlage ausgelesen wird, in Sekunden (lokal mindestens 30 s, über die Cloud mindestens 300 s).",
+        "es": "Cada cuánto se lee la instalación, en segundos (mínimo 30 s en local, 300 s mediante la nube)."
+      },
+      "required": false,
+      "default": 60,
+      "min": 30,
+      "max": 3600
+    },
+    {
+      "key": "grid_threshold",
+      "type": "number",
+      "label": {
+        "en": "Grid dead band (W)",
+        "fr": "Zone morte réseau (W)",
+        "de": "Netz-Totband (W)",
+        "es": "Banda muerta de red (W)"
+      },
+      "description": {
+        "en": "Below this power, the grid exchange counts as balanced: avoids flapping triggers around zero.",
+        "fr": "Sous cette puissance, l’échange avec le réseau est considéré équilibré : évite les déclenchements répétés autour de zéro.",
+        "de": "Unterhalb dieser Leistung gilt der Netzaustausch als ausgeglichen: vermeidet ständiges Auslösen um null.",
+        "es": "Por debajo de esta potencia, el intercambio con la red se considera equilibrado: evita disparos repetidos en torno a cero."
+      },
+      "required": false,
+      "default": 100,
+      "min": 0,
+      "max": 5000
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "description": {
+        "en": "Reads the installation through every configured channel.",
+        "fr": "Lit l'installation par chaque connexion configurée.",
+        "de": "Liest die Anlage über jede konfigurierte Verbindung aus.",
+        "es": "Lee la instalación por cada conexión configurada."
+      },
+      "timeout_seconds": 60
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "inverter_status_changed",
+      "label": {
+        "en": "Inverter status changed",
+        "fr": "L'état de l'onduleur change",
+        "de": "Wechselrichterstatus geändert",
+        "es": "Cambio de estado del inversor"
+      },
+      "description": {
+        "en": "Production starts or stops, the inverter goes into fault, is limited...",
+        "fr": "La production démarre ou s'arrête, l'onduleur passe en défaut, est bridé...",
+        "de": "Die Erzeugung startet oder stoppt, Störung, Leistungsbegrenzung...",
+        "es": "La producción empieza o se detiene, el inversor entra en avería, se limita..."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Inverter",
+            "fr": "Onduleur",
+            "de": "Wechselrichter",
+            "es": "Inversor"
+          }
+        },
+        {
+          "key": "status",
+          "type": "multi_select",
+          "label": {
+            "en": "New status",
+            "fr": "Nouvel état",
+            "de": "Neuer Status",
+            "es": "Nuevo estado"
+          },
+          "options": [
+            {
+              "value": "standby",
+              "label": {
+                "en": "Standby",
+                "fr": "En veille",
+                "de": "Standby",
+                "es": "En espera"
+              }
+            },
+            {
+              "value": "starting",
+              "label": {
+                "en": "Starting",
+                "fr": "Démarrage",
+                "de": "Startet",
+                "es": "Arrancando"
+              }
+            },
+            {
+              "value": "on_grid",
+              "label": {
+                "en": "Producing (on-grid)",
+                "fr": "En production (réseau)",
+                "de": "Produktion (Netz)",
+                "es": "Produciendo (red)"
+              }
+            },
+            {
+              "value": "limited",
+              "label": {
+                "en": "Power limited",
+                "fr": "Puissance limitée",
+                "de": "Leistung begrenzt",
+                "es": "Potencia limitada"
+              }
+            },
+            {
+              "value": "off_grid",
+              "label": {
+                "en": "Off-grid",
+                "fr": "Hors réseau",
+                "de": "Inselbetrieb",
+                "es": "Aislado de la red"
+              }
+            },
+            {
+              "value": "shutdown",
+              "label": {
+                "en": "Shut down",
+                "fr": "Arrêté",
+                "de": "Abgeschaltet",
+                "es": "Apagado"
+              }
+            },
+            {
+              "value": "fault",
+              "label": {
+                "en": "Fault",
+                "fr": "En défaut",
+                "de": "Störung",
+                "es": "Avería"
+              }
+            },
+            {
+              "value": "no_irradiation",
+              "label": {
+                "en": "No sunlight",
+                "fr": "Pas de soleil",
+                "de": "Keine Einstrahlung",
+                "es": "Sin irradiación"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Other",
+                "fr": "Autre",
+                "de": "Sonstiges",
+                "es": "Otro"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "status",
+          "type": "string",
+          "label": {
+            "en": "New status",
+            "fr": "Nouvel état",
+            "de": "Neuer Status",
+            "es": "Nuevo estado"
+          }
+        },
+        {
+          "key": "previous_status",
+          "type": "string",
+          "label": {
+            "en": "Previous status",
+            "fr": "État précédent",
+            "de": "Vorheriger Status",
+            "es": "Estado anterior"
+          }
+        },
+        {
+          "key": "production_power",
+          "type": "number",
+          "label": {
+            "en": "Production (W)",
+            "fr": "Production (W)",
+            "de": "Erzeugung (W)",
+            "es": "Producción (W)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "grid_flow_changed",
+      "label": {
+        "en": "Grid exchange changed",
+        "fr": "L'échange réseau change",
+        "de": "Netzaustausch geändert",
+        "es": "Cambio en el intercambio con la red"
+      },
+      "description": {
+        "en": "The house starts exporting a surplus, or drawing from the grid.",
+        "fr": "La maison commence à injecter un surplus, ou à consommer sur le réseau.",
+        "de": "Das Haus beginnt, Überschuss einzuspeisen oder Netzstrom zu beziehen.",
+        "es": "La casa empieza a inyectar excedente o a consumir de la red."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Power meter",
+            "fr": "Compteur",
+            "de": "Stromzähler",
+            "es": "Medidor"
+          }
+        },
+        {
+          "key": "flow",
+          "type": "multi_select",
+          "label": {
+            "en": "New exchange",
+            "fr": "Nouvel échange",
+            "de": "Neuer Austausch",
+            "es": "Nuevo intercambio"
+          },
+          "options": [
+            {
+              "value": "exporting",
+              "label": {
+                "en": "Exporting to the grid",
+                "fr": "Injection réseau",
+                "de": "Netzeinspeisung",
+                "es": "Inyectando a la red"
+              }
+            },
+            {
+              "value": "importing",
+              "label": {
+                "en": "Drawing from the grid",
+                "fr": "Soutirage réseau",
+                "de": "Netzbezug",
+                "es": "Consumiendo de la red"
+              }
+            },
+            {
+              "value": "idle",
+              "label": {
+                "en": "Balanced",
+                "fr": "Équilibré",
+                "de": "Ausgeglichen",
+                "es": "Equilibrado"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "flow",
+          "type": "string",
+          "label": {
+            "en": "New exchange",
+            "fr": "Nouvel échange",
+            "de": "Neuer Austausch",
+            "es": "Nuevo intercambio"
+          }
+        },
+        {
+          "key": "previous_flow",
+          "type": "string",
+          "label": {
+            "en": "Previous exchange",
+            "fr": "Échange précédent",
+            "de": "Vorheriger Austausch",
+            "es": "Intercambio anterior"
+          }
+        },
+        {
+          "key": "grid_power",
+          "type": "number",
+          "label": {
+            "en": "Grid power (W)",
+            "fr": "Puissance réseau (W)",
+            "de": "Netzleistung (W)",
+            "es": "Potencia de red (W)"
+          },
+          "description": {
+            "en": "Positive when drawing from the grid, negative when exporting.",
+            "fr": "Positive en soutirage, négative en injection.",
+            "de": "Positiv bei Netzbezug, negativ bei Einspeisung.",
+            "es": "Positiva al consumir de la red, negativa al inyectar."
+          }
+        }
+      ]
+    },
+    {
+      "key": "battery_level_crossed",
+      "label": {
+        "en": "Battery level crossed",
+        "fr": "Seuil de batterie franchi",
+        "de": "Akkustand überschritten",
+        "es": "Nivel de batería cruzado"
+      },
+      "description": {
+        "en": "The battery charge rises above or falls below a level (10 % steps).",
+        "fr": "La charge de la batterie passe au-dessus ou en dessous d’un seuil (par pas de 10 %).",
+        "de": "Der Akkustand steigt über oder fällt unter eine Schwelle (10-%-Schritte).",
+        "es": "La carga de la batería sube o baja de un nivel (pasos del 10 %)."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Battery",
+            "fr": "Batterie",
+            "de": "Akku",
+            "es": "Batería"
+          }
+        },
+        {
+          "key": "direction",
+          "type": "select",
+          "label": {
+            "en": "Direction",
+            "fr": "Sens",
+            "de": "Richtung",
+            "es": "Sentido"
+          },
+          "options": [
+            {
+              "value": "rising",
+              "label": {
+                "en": "Rises above",
+                "fr": "Passe au-dessus",
+                "de": "Steigt über",
+                "es": "Sube por encima"
+              }
+            },
+            {
+              "value": "falling",
+              "label": {
+                "en": "Falls below",
+                "fr": "Passe en dessous",
+                "de": "Fällt unter",
+                "es": "Baja por debajo"
+              }
+            }
+          ]
+        },
+        {
+          "key": "level",
+          "type": "select",
+          "label": {
+            "en": "Level",
+            "fr": "Seuil",
+            "de": "Schwelle",
+            "es": "Nivel"
+          },
+          "options": [
+            {
+              "value": "10",
+              "label": {
+                "en": "10 %",
+                "fr": "10 %",
+                "de": "10 %",
+                "es": "10 %"
+              }
+            },
+            {
+              "value": "20",
+              "label": {
+                "en": "20 %",
+                "fr": "20 %",
+                "de": "20 %",
+                "es": "20 %"
+              }
+            },
+            {
+              "value": "30",
+              "label": {
+                "en": "30 %",
+                "fr": "30 %",
+                "de": "30 %",
+                "es": "30 %"
+              }
+            },
+            {
+              "value": "40",
+              "label": {
+                "en": "40 %",
+                "fr": "40 %",
+                "de": "40 %",
+                "es": "40 %"
+              }
+            },
+            {
+              "value": "50",
+              "label": {
+                "en": "50 %",
+                "fr": "50 %",
+                "de": "50 %",
+                "es": "50 %"
+              }
+            },
+            {
+              "value": "60",
+              "label": {
+                "en": "60 %",
+                "fr": "60 %",
+                "de": "60 %",
+                "es": "60 %"
+              }
+            },
+            {
+              "value": "70",
+              "label": {
+                "en": "70 %",
+                "fr": "70 %",
+                "de": "70 %",
+                "es": "70 %"
+              }
+            },
+            {
+              "value": "80",
+              "label": {
+                "en": "80 %",
+                "fr": "80 %",
+                "de": "80 %",
+                "es": "80 %"
+              }
+            },
+            {
+              "value": "90",
+              "label": {
+                "en": "90 %",
+                "fr": "90 %",
+                "de": "90 %",
+                "es": "90 %"
+              }
+            },
+            {
+              "value": "100",
+              "label": {
+                "en": "100 %",
+                "fr": "100 %",
+                "de": "100 %",
+                "es": "100 %"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "direction",
+          "type": "string",
+          "label": {
+            "en": "Direction",
+            "fr": "Sens",
+            "de": "Richtung",
+            "es": "Sentido"
+          }
+        },
+        {
+          "key": "level",
+          "type": "string",
+          "label": {
+            "en": "Level crossed",
+            "fr": "Seuil franchi",
+            "de": "Überschrittene Schwelle",
+            "es": "Nivel cruzado"
+          }
+        },
+        {
+          "key": "battery_level",
+          "type": "number",
+          "label": {
+            "en": "Battery level (%)",
+            "fr": "Niveau de batterie (%)",
+            "de": "Akkustand (%)",
+            "es": "Nivel de batería (%)"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "force_battery_charge",
+      "label": {
+        "en": "Force the battery to charge",
+        "fr": "Forcer la charge de la batterie",
+        "de": "Akku-Ladung erzwingen",
+        "es": "Forzar la carga de la batería"
+      },
+      "description": {
+        "en": "Local Modbus connection required.",
+        "fr": "Nécessite la connexion Modbus locale.",
+        "de": "Erfordert die lokale Modbus-Verbindung.",
+        "es": "Requiere la conexión Modbus local."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "power",
+          "type": "number",
+          "label": {
+            "en": "Power (W)",
+            "fr": "Puissance (W)",
+            "de": "Leistung (W)",
+            "es": "Potencia (W)"
+          },
+          "required": true,
+          "default": 2500,
+          "min": 100,
+          "max": 15000
+        },
+        {
+          "key": "duration",
+          "type": "number",
+          "label": {
+            "en": "Duration (minutes)",
+            "fr": "Durée (minutes)",
+            "de": "Dauer (Minuten)",
+            "es": "Duración (minutos)"
+          },
+          "required": true,
+          "default": 60,
+          "min": 1,
+          "max": 1440
+        }
+      ],
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Command applied",
+            "fr": "Commande appliquée",
+            "de": "Befehl ausgeführt",
+            "es": "Orden aplicada"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    },
+    {
+      "key": "force_battery_discharge",
+      "label": {
+        "en": "Force the battery to discharge",
+        "fr": "Forcer la décharge de la batterie",
+        "de": "Akku-Entladung erzwingen",
+        "es": "Forzar la descarga de la batería"
+      },
+      "description": {
+        "en": "Local Modbus connection required.",
+        "fr": "Nécessite la connexion Modbus locale.",
+        "de": "Erfordert die lokale Modbus-Verbindung.",
+        "es": "Requiere la conexión Modbus local."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "power",
+          "type": "number",
+          "label": {
+            "en": "Power (W)",
+            "fr": "Puissance (W)",
+            "de": "Leistung (W)",
+            "es": "Potencia (W)"
+          },
+          "required": true,
+          "default": 2500,
+          "min": 100,
+          "max": 15000
+        },
+        {
+          "key": "duration",
+          "type": "number",
+          "label": {
+            "en": "Duration (minutes)",
+            "fr": "Durée (minutes)",
+            "de": "Dauer (Minuten)",
+            "es": "Duración (minutos)"
+          },
+          "required": true,
+          "default": 60,
+          "min": 1,
+          "max": 1440
+        }
+      ],
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Command applied",
+            "fr": "Commande appliquée",
+            "de": "Befehl ausgeführt",
+            "es": "Orden aplicada"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    },
+    {
+      "key": "stop_battery_forced_mode",
+      "label": {
+        "en": "Stop forcing the battery",
+        "fr": "Arrêter le forçage de la batterie",
+        "de": "Akku-Erzwingung beenden",
+        "es": "Detener el forzado de la batería"
+      },
+      "description": {
+        "en": "Local Modbus connection required.",
+        "fr": "Nécessite la connexion Modbus locale.",
+        "de": "Erfordert die lokale Modbus-Verbindung.",
+        "es": "Requiere la conexión Modbus local."
+      },
+      "timeout_seconds": 30,
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Command applied",
+            "fr": "Commande appliquée",
+            "de": "Befehl ausgeführt",
+            "es": "Orden aplicada"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_battery_working_mode",
+      "label": {
+        "en": "Set the battery working mode",
+        "fr": "Changer le mode de la batterie",
+        "de": "Akku-Betriebsmodus setzen",
+        "es": "Cambiar el modo de la batería"
+      },
+      "description": {
+        "en": "Local Modbus connection required.",
+        "fr": "Nécessite la connexion Modbus locale.",
+        "de": "Erfordert die lokale Modbus-Verbindung.",
+        "es": "Requiere la conexión Modbus local."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "mode",
+          "type": "select",
+          "label": {
+            "en": "Working mode",
+            "fr": "Mode de fonctionnement",
+            "de": "Betriebsmodus",
+            "es": "Modo de funcionamiento"
+          },
+          "required": true,
+          "options": [
+            {
+              "value": "maximise_self_consumption",
+              "label": {
+                "en": "Maximise self-consumption",
+                "fr": "Autoconsommation maximale",
+                "de": "Eigenverbrauch maximieren",
+                "es": "Maximizar autoconsumo"
+              }
+            },
+            {
+              "value": "time_of_use",
+              "label": {
+                "en": "Time of use",
+                "fr": "Heures creuses / pleines",
+                "de": "Nutzungszeit (TOU)",
+                "es": "Por franjas horarias"
+              }
+            },
+            {
+              "value": "fully_fed_to_grid",
+              "label": {
+                "en": "Fully fed to grid",
+                "fr": "Injection totale au réseau",
+                "de": "Volleinspeisung",
+                "es": "Inyección total a la red"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Command applied",
+            "fr": "Commande appliquée",
+            "de": "Befehl ausgeführt",
+            "es": "Orden aplicada"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_grid_export_limit",
+      "label": {
+        "en": "Limit the grid export",
+        "fr": "Limiter l'injection réseau",
+        "de": "Netzeinspeisung begrenzen",
+        "es": "Limitar la inyección a la red"
+      },
+      "description": {
+        "en": "Zero export, a limit in watts, or no limit. Local Modbus connection required.",
+        "fr": "Injection zéro, limite en watts ou sans limite. Nécessite la connexion Modbus locale.",
+        "de": "Nulleinspeisung, Grenze in Watt oder unbegrenzt. Erfordert die lokale Modbus-Verbindung.",
+        "es": "Inyección cero, límite en vatios o sin límite. Requiere la conexión Modbus local."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "mode",
+          "type": "select",
+          "label": {
+            "en": "Limit",
+            "fr": "Limite",
+            "de": "Begrenzung",
+            "es": "Límite"
+          },
+          "required": true,
+          "options": [
+            {
+              "value": "unlimited",
+              "label": {
+                "en": "No limit",
+                "fr": "Sans limite",
+                "de": "Unbegrenzt",
+                "es": "Sin límite"
+              }
+            },
+            {
+              "value": "zero_export",
+              "label": {
+                "en": "Zero export",
+                "fr": "Injection zéro",
+                "de": "Nulleinspeisung",
+                "es": "Inyección cero"
+              }
+            },
+            {
+              "value": "limited",
+              "label": {
+                "en": "Limited to (W)",
+                "fr": "Limitée à (W)",
+                "de": "Begrenzt auf (W)",
+                "es": "Limitada a (W)"
+              }
+            }
+          ]
+        },
+        {
+          "key": "limit",
+          "type": "number",
+          "label": {
+            "en": "Maximum export (W)",
+            "fr": "Injection maximale (W)",
+            "de": "Maximale Einspeisung (W)",
+            "es": "Inyección máxima (W)"
+          },
+          "required": false,
+          "default": 0,
+          "min": 0,
+          "max": 100000
+        }
+      ],
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Command applied",
+            "fr": "Commande appliquée",
+            "de": "Befehl ausgeführt",
+            "es": "Orden aplicada"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_inverter_state",
+      "label": {
+        "en": "Start or shut down the inverter",
+        "fr": "Démarrer ou arrêter l'onduleur",
+        "de": "Wechselrichter starten oder abschalten",
+        "es": "Arrancar o apagar el inversor"
+      },
+      "description": {
+        "en": "Local Modbus connection required.",
+        "fr": "Nécessite la connexion Modbus locale.",
+        "de": "Erfordert die lokale Modbus-Verbindung.",
+        "es": "Requiere la conexión Modbus local."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "state",
+          "type": "select",
+          "label": {
+            "en": "Command",
+            "fr": "Commande",
+            "de": "Befehl",
+            "es": "Orden"
+          },
+          "required": true,
+          "options": [
+            {
+              "value": "start",
+              "label": {
+                "en": "Start",
+                "fr": "Démarrer",
+                "de": "Starten",
+                "es": "Arrancar"
+              }
+            },
+            {
+              "value": "stop",
+              "label": {
+                "en": "Shut down",
+                "fr": "Arrêter",
+                "de": "Abschalten",
+                "es": "Apagar"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Command applied",
+            "fr": "Commande appliquée",
+            "de": "Befehl ausgeführt",
+            "es": "Orden aplicada"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    },
+    {
+      "key": "read_live_data",
+      "label": {
+        "en": "Read the solar installation",
+        "fr": "Lire l'installation solaire",
+        "de": "Solaranlage auslesen",
+        "es": "Leer la instalación solar"
+      },
+      "description": {
+        "en": "Exposes production, consumption, grid and battery to the next actions.",
+        "fr": "Expose production, consommation, réseau et batterie aux actions suivantes.",
+        "de": "Stellt Erzeugung, Verbrauch, Netz und Akku den nächsten Aktionen bereit.",
+        "es": "Expone producción, consumo, red y batería a las acciones siguientes."
+      },
+      "timeout_seconds": 60,
+      "outputs": [
+        {
+          "key": "success",
+          "type": "boolean",
+          "label": {
+            "en": "Command applied",
+            "fr": "Commande appliquée",
+            "de": "Befehl ausgeführt",
+            "es": "Orden aplicada"
+          }
+        },
+        {
+          "key": "production_power",
+          "type": "number",
+          "label": {
+            "en": "Production (W)",
+            "fr": "Production (W)",
+            "de": "Erzeugung (W)",
+            "es": "Producción (W)"
+          }
+        },
+        {
+          "key": "daily_production",
+          "type": "number",
+          "label": {
+            "en": "Today's production (kWh)",
+            "fr": "Production du jour (kWh)",
+            "de": "Heutige Erzeugung (kWh)",
+            "es": "Producción de hoy (kWh)"
+          }
+        },
+        {
+          "key": "house_power",
+          "type": "number",
+          "label": {
+            "en": "House consumption (W)",
+            "fr": "Consommation maison (W)",
+            "de": "Hausverbrauch (W)",
+            "es": "Consumo de la casa (W)"
+          }
+        },
+        {
+          "key": "grid_power",
+          "type": "number",
+          "label": {
+            "en": "Grid power (W)",
+            "fr": "Puissance réseau (W)",
+            "de": "Netzleistung (W)",
+            "es": "Potencia de red (W)"
+          }
+        },
+        {
+          "key": "battery_level",
+          "type": "number",
+          "label": {
+            "en": "Battery level (%)",
+            "fr": "Niveau de batterie (%)",
+            "de": "Akkustand (%)",
+            "es": "Nivel de batería (%)"
+          }
+        },
+        {
+          "key": "battery_power",
+          "type": "number",
+          "label": {
+            "en": "Battery power (W)",
+            "fr": "Puissance batterie (W)",
+            "de": "Akkuleistung (W)",
+            "es": "Potencia de batería (W)"
+          }
+        },
+        {
+          "key": "inverter_status",
+          "type": "string",
+          "label": {
+            "en": "Inverter status",
+            "fr": "État de l'onduleur",
+            "de": "Wechselrichterstatus",
+            "es": "Estado del inversor"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Message",
+            "fr": "Message",
+            "de": "Meldung",
+            "es": "Mensaje"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "solar_overview",
+      "label": {
+        "en": "Solar overview",
+        "fr": "Vue solaire",
+        "de": "Solarübersicht",
+        "es": "Resumen solar"
+      },
+      "description": {
+        "en": "Live production, consumption, grid and battery, with the day chart.",
+        "fr": "Production, consommation, réseau et batterie en direct, avec la courbe du jour.",
+        "de": "Erzeugung, Verbrauch, Netz und Akku live, mit Tageskurve.",
+        "es": "Producción, consumo, red y batería en directo, con la curva del día."
+      },
+      "icon": "sun",
+      "action_timeout_seconds": 30
+    },
+    {
+      "key": "battery_control",
+      "label": {
+        "en": "Battery control",
+        "fr": "Pilotage batterie",
+        "de": "Akkusteuerung",
+        "es": "Control de batería"
+      },
+      "description": {
+        "en": "Battery level and power, force a charge or a discharge, change the mode.",
+        "fr": "Niveau et puissance de la batterie, forcer une charge ou une décharge, changer de mode.",
+        "de": "Akkustand und -leistung, Laden oder Entladen erzwingen, Modus ändern.",
+        "es": "Nivel y potencia de la batería, forzar carga o descarga, cambiar el modo."
+      },
+      "icon": "battery-charging",
+      "action_timeout_seconds": 30
+    }
+  ]
+}
