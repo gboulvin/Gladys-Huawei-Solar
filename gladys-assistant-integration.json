@@ -8,8 +8,8 @@
     "de": "Huawei SUN2000 Wechselrichter, LUNA2000 Akkus und Zähler, lokal oder Cloud.",
     "es": "Inversores Huawei SUN2000, baterías LUNA2000 y medidores, local o nube."
   },
-  "version": "0.0.0",
-  "docker_image": "ghcr.io/gboulvin/gladys-huawei-solar:0.0.0",
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-huawei-solar:1.0.0",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Huawei-Solar/main/cover.png",
   "categories": ["energy"],

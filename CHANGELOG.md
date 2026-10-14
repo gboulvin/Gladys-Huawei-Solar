@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-14
+
 ### Added
 
 - First release of the Huawei Solar integration for Gladys Assistant (5.1.0 or
@@ -31,3 +33,6 @@ the notes of the version's GitHub Release.
 - Dashboard widgets: solar overview and battery control.
 - "Test the connection" button in the Configuration screen.
 - English, French, German and Spanish texts and documentation.
+
+[Unreleased]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gboulvin/Gladys-Huawei-Solar/releases/tag/v1.0.0

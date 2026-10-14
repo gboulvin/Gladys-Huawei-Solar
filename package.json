@@ -1,6 +1,6 @@
 {
   "name": "gladys-huawei-solar",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Gladys Assistant external integration for Huawei Solar: SUN2000 inverters, LUNA2000 batteries and power meters, over local Modbus TCP or the FusionSolar cloud.",
   "type": "module",
