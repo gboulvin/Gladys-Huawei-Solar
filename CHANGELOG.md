@@ -10,6 +10,14 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Security
+
+- `brace-expansion`, pulled in by ESLint, raised to 5.0.12 against the
+  high-severity denial-of-service advisories (GHSA-mh99-v99m-4gvg and
+  related). A development tool only: the published image never shipped it.
+- The image is rebuilt on the latest `node:24-alpine` (Node.js and Alpine
+  security patches); development tools and CI actions up to date.
+
 ## [1.0.0] - 2026-10-14
 
 ### Added
