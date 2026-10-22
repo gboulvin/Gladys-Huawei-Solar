@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-22
+
 ### Security
 
 - `brace-expansion`, pulled in by ESLint, raised to 5.0.12 against the
@@ -42,5 +44,6 @@ the notes of the version's GitHub Release.
 - "Test the connection" button in the Configuration screen.
 - English, French, German and Spanish texts and documentation.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/gboulvin/Gladys-Huawei-Solar/releases/tag/v1.0.0
