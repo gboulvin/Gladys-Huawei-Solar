@@ -10,7 +10,7 @@ network (Modbus TCP) and/or the **FusionSolar cloud** (Northbound API).
 - 🇩🇪 Benutzerhandbuch: [docs/de.md](docs/de.md)
 - 🇪🇸 Guía de usuario: [docs/es.md](docs/es.md)
 
-Requires **Gladys 5.1.0** or later.
+Requires **Gladys 5.3.0** or later.
 
 ## Features
 

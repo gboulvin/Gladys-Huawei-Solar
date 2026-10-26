@@ -15,7 +15,7 @@ Con ambas, el interruptor **Preferir la conexión local** elige la preferida;
 si falla, la otra toma el relevo y la insignia de los dispositivos muestra un
 punto naranja.
 
-Requiere **Gladys 5.1.0** o posterior.
+Requiere **Gladys 5.3.0** o posterior.
 
 ## 1. Conexión local (recomendada)
 
