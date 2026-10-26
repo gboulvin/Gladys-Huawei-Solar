@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-26
+
 ### Changed
 
 - Requires Gladys 5.3.0 or later: the manifest declares search keywords for
@@ -50,6 +52,7 @@ the notes of the version's GitHub Release.
 - "Test the connection" button in the Configuration screen.
 - English, French, German and Spanish texts and documentation.
 
-[Unreleased]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/gboulvin/Gladys-Huawei-Solar/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/gboulvin/Gladys-Huawei-Solar/releases/tag/v1.0.0
