@@ -15,7 +15,7 @@ With both, the **Prefer the local connection** toggle picks the preferred one;
 if it fails, the other one takes over and the device badge shows an orange
 dot.
 
-Requires **Gladys 5.1.0** or later.
+Requires **Gladys 5.3.0** or later.
 
 ## 1. Local connection (recommended)
 

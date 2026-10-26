@@ -15,7 +15,7 @@ Avec les deux, l'interrupteur **Préférer la connexion locale** choisit la
 connexion préférée ; si elle échoue, l'autre prend le relais et le badge des
 appareils affiche un point orange.
 
-Nécessite **Gladys 5.1.0** ou plus récent.
+Nécessite **Gladys 5.3.0** ou plus récent.
 
 ## 1. Connexion locale (recommandée)
 

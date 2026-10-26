@@ -15,7 +15,7 @@ Mit beiden wählt der Schalter **Lokale Verbindung bevorzugen** die bevorzugte
 Verbindung; fällt sie aus, übernimmt die andere und das Geräte-Badge zeigt
 einen orangefarbenen Punkt.
 
-Erfordert **Gladys 5.1.0** oder neuer.
+Erfordert **Gladys 5.3.0** oder neuer.
 
 ## 1. Lokale Verbindung (empfohlen)
 
