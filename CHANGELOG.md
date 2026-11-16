@@ -10,6 +10,10 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Fixed
+
+- Inverters and batteries could not be added from the Discovery screen: Gladys refused their text and select features, which had no `min` / `max` ("t_device_feature.min cannot be null"). They now declare `min` / `max` 0, as Gladys requires for features without a range.
+
 ## [1.1.0] - 2026-10-26
 
 ### Changed
