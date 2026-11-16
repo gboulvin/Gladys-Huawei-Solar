@@ -123,6 +123,9 @@ export const battery = {
           external_id: ids.feature(BATTERY_FEATURE.MODE),
           category: DEVICE_FEATURE_CATEGORIES.TEXT,
           type: DEVICE_FEATURE_TYPES.TEXT.SELECT,
+          // No range, but Gladys stores min / max as NOT NULL columns.
+          min: 0,
+          max: 0,
           read_only: false,
           has_feedback: true,
           keep_history: false,
@@ -137,6 +140,9 @@ export const battery = {
           external_id: ids.feature(BATTERY_FEATURE.STATUS),
           category: DEVICE_FEATURE_CATEGORIES.TEXT,
           type: DEVICE_FEATURE_TYPES.TEXT.TEXT,
+          // No range, but Gladys stores min / max as NOT NULL columns.
+          min: 0,
+          max: 0,
           read_only: true,
           has_feedback: false,
           keep_history: false,
